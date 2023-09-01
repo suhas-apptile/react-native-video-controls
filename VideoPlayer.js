@@ -1187,8 +1187,24 @@ export default class VideoPlayer extends Component {
           />
         </View>
       );
+    }else{
+      /**
+      * Making same Functionality Accross platorm [Android and IOS] when Poster Prop is passed
+      * *
+      * Poster will be available until user clicks on the play button in Android. But in IOS
+      * when video is readyForDisplay By default it will load first frame of the video.
+      * *
+      * Below condition disable the loading of first frame in IOS when Poster value available.
+      */
+      if((this.state.paused) && (this.props.poster !== "") && (this.state.seekerPosition) === 0){
+      return (
+        <View style={styles.poster.container}>
+          <Image source={{uri: this.props.poster}} style={styles.poster.image}/>
+        </View>);
+      }else{
+        return null;
+      }
     }
-    return null;
   }
 
   renderError() {
@@ -1248,6 +1264,21 @@ export default class VideoPlayer extends Component {
  * And then there's volume/seeker styles.
  */
 const styles = {
+  poster: StyleSheet.create({
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+      height: '100%',
+      width: '100%',
+      textAlign: 'center',
+      backgroundColor: '#000'
+    },
+    image: {
+      resizeMode: 'contain',
+      width: '100%',
+      flex: 1
+    },
+  }),
   player: StyleSheet.create({
     container: {
       overflow: 'hidden',
